@@ -5,6 +5,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -131,5 +132,12 @@ public class StreamForker<T> {
 		public int characteristics() {
 			return 0;
 		}
+	}
+
+	public static void main(String[] args) {
+		Stream<Menu> menuStream = Arrays
+				.stream(new Menu[] { new Menu("m1"), new Menu("m2"), new Menu("m3") });
+		Results results = new StreamForker<Menu>(menuStream).fork("k1", m -> m.map(Menu::getName).collect(Collectors.joining())).getResults();
+		System.out.println(results.get("k1").toString());
 	}
 }
